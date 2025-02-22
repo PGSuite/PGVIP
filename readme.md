@@ -19,7 +19,7 @@ It was originally developed as a bash script, then rewritten in C language.
 *   managing a virtual IP address, running a script to automatically turn it off (necessary if the connection is lost)
 *   activation (promotion) of a standby database and transfer of a virtual IP address
 
-Documentation in file [doc/documentation.html](https://htmlpreview.github.io/?https://github.com/PGSuite/PGVIP/blob/main/doc/documentation.html)  
+All actions in the documentation file [doc/documentation.html](https://htmlpreview.github.io/?https://github.com/PGSuite/PGVIP/blob/main/doc/documentation.html#actions)  
 
 Overview on site [pgvip.org](https://pgvip.org/en/)
 
@@ -49,7 +49,7 @@ PGVIP is installed only on web servers, not on database servers.
 ```pgvip status ```
 ```journalctl -fu pgvip ```
 
-6\. View run-time configuration with the final OS commands
+6\. View run-time configuration with the final OS commands  
 ```pgvip show config ```
 
 
