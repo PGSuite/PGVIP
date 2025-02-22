@@ -21,7 +21,11 @@ It was originally developed as a bash script, then rewritten in C language.
 
 Documentation in file [doc/documentation.html](https://htmlpreview.github.io/?https://github.com/PGSuite/PGVIP/blob/main/doc/documentation.html)  
 
+Overview on site [pgvip.org](https://pgvip.org/en/)
+
 ### Installation ### 
+
+PGVIP is installed only on web servers, not on database servers.
 
 0\. Preparation  
     reserve a virtual IP address (for example, in the DHCP server)  
@@ -37,8 +41,17 @@ Documentation in file [doc/documentation.html](https://htmlpreview.github.io/?ht
 3\. Install  
 ```make install ip_master=[ip_master] ip_standby=[ip_standby] ip_virtual=[ip_virtual] subnet_mask=[subnet_mask] ```
 
-3\. Start service  
+4\. Start service  
 ```systemctl --now enable pgvip ```
+
+5\. Check status and system log  
+```systemctl status pgvip ```
+```pgvip status ```
+```journalctl -fu pgvip ```
+
+6\. View run-time configuration with the final OS commands
+```pgvip show config ```
+
 
 ### Failover example ### 
 
@@ -86,8 +99,6 @@ status: STANDBY_PROMOTED (duration: 0 00:00:06)
 *   **All commands are customizable** - pgvip service only executes operating system commands from the configuration file. To check, the administrator can execute any in command line
 *   **Obvious action log** - When an action is executed, printed to log: action name, condition, status (_pgvip status_), OS command with output. The action name and condition are actual C code snippets from the action.c file, obtained by the macro #define #\[name\]
 *   **Actions without history** - actions are performed only depending on the current status, it is possible not to save information about the state of databases and do not synchronize web servers
-
-Overview on site [pgvip.org](https://pgvip.org/en/)
 
 ### Support ### 
 
