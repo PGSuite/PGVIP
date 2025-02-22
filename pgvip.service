@@ -1,0 +1,10 @@
+[Unit]
+Description=pgvip (PostgreSQL master-standby auto failover)
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/pgvip execute 
+
+[Install]
+WantedBy=multi-user.target
