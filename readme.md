@@ -45,9 +45,9 @@ PGVIP is installed only on web servers, not on database servers.
 ```systemctl --now enable pgvip ```
 
 5\. Check status and system log  
-```systemctl status pgvip ```
-```pgvip status ```
-```journalctl -fu pgvip ```
+```systemctl status pgvip ```  
+```pgvip status ```  
+```journalctl -fu pgvip ```  
 
 6\. View run-time configuration with the final OS commands  
 ```pgvip show config ```
