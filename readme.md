@@ -7,7 +7,7 @@ There is no need to install anything on the database servers; the web server con
 
 <b>Failover schema</b>
 
-![Failover schema](https://pgvip.org/files/schema/failover-schema.png "Failover schema"){:width="200px"}
+![Failover schema](doc/failover-schema.png)
 
 Technically, the PGVIP service is implemented as a wrapper that executes operating system commands from a configuration file.
 It was originally developed as a bash script, then rewritten in C language.
