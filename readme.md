@@ -19,7 +19,7 @@ It was originally developed as a bash script, then rewritten in C language.
 *   managing a virtual IP address, running a script to automatically turn it off (necessary if the connection is lost)
 *   activation (promotion) of a standby database and transfer of a virtual IP address
 
-Documentation in file [documentation/documentation.html](https://htmlpreview.github.io/?https://github.com/PGSuite/PGVIP/blob/main/documentation/documentation.html)  
+Documentation in file [doc/documentation.html](https://htmlpreview.github.io/?https://github.com/PGSuite/PGVIP/blob/main/doc/documentation.html)  
 
 ### Installation ### 
 
