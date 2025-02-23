@@ -42,7 +42,7 @@ PGVIP is installed only on web servers, not on database servers.
 3\. Install  
 ```make install ip_master=[ip_master] ip_standby=[ip_standby] ip_virtual=[ip_virtual] subnet_mask=[subnet_mask] ```  
 example:  
-```make install ip_master=192.168.56.1 ip_standby=192.168.56.2 ip_virtual=192.168.56.10 subnet_mask=255.255.255.0 ```
+```make install ip_master=192.168.56.1 ip_standby=192.168.56.2 ip_virtual=192.168.56.10 subnet_mask=24 ```
 
 4\. Start service  
 ```systemctl --now enable pgvip ```
