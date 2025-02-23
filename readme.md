@@ -57,10 +57,10 @@ example:
 /etc/pgvip.conf - configuration file, copied by the <em>make install</em> command, which writes IP addresses into it.
 To change the parameters, need to edit the file and restart the service by executing <em>systemctl restart pgvip</em>
 
-The run-time configuration with the final OS commands can be viewed using the command
+The run-time configuration with the final OS commands can be viewed using the command  
 ```pgvip show config ``` 
-example:
-```pgvip show config | grep command_master_db_state ``` 
+example:  
+```pgvip show config | grep command_master_db_state ```  
 to check, the received command can be executed in the command line
 
 ### Failover example ### 
