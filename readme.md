@@ -58,10 +58,10 @@ example:
 To change the parameters, need to edit the file and restart the service by executing <em>systemctl restart pgvip</em>
 
 The run-time configuration with the final OS commands can be viewed using the command  
-```pgvip show config ``` 
+```pgvip show config ```  
 example:  
 ```pgvip show config | grep command_master_db_state ```  
-to check, the received command can be executed in the command line
+to check, the printed command can be executed in the command line
 
 ### Failover example ### 
 
