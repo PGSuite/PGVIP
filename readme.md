@@ -1,4 +1,4 @@
-## PGVIP | PostgreSQL master-standby auto failover
+## PGVIP | Auto failover to a standby PostgreSQL server via virtual IP
 
 PGVIP - auto failover service from master to standby PostgreSQL database using virtual (floating) IP address
 

@@ -472,7 +472,7 @@ a, a:link, a:active, a:visited {
 <p><b>Описание</b></p>
 <br>
 
-При запуске служба pgvip (модуль <a href="https://github.com/PGSuite/PGVIP/blob/main/pgvip.c" target="_blank">pgvip.c</a>) загружает параметры из конфигурационного файла в глобальные переменные (<a href="https://github.com/PGSuite/PGVIP/blob/main/global.h" target="_blank">global.h</a>,<a href="https://github.com/PGSuite/PGVIP/blob/main/global.c" target="_blank">global.c</a>),
+При запуске служба pgvip (модуль <a href="https://github.com/PGSuite/PGVIP/blob/main/pgvip.c" target="_blank">pgvip.c</a>) загружает параметры из конфигурационного файла <a href="https://github.com/PGSuite/PGVIP/blob/main/pgvip.conf" target="_blank">pgvip.conf</a> в глобальные переменные (<a href="https://github.com/PGSuite/PGVIP/blob/main/global.h" target="_blank">global.h</a>,<a href="https://github.com/PGSuite/PGVIP/blob/main/global.c" target="_blank">global.c</a>),
 на основе шаблонов с переменными формирует финальные команды операционной системы.
 Всем параметрам конфигурационного файла и финальным командам соответствуют одноименные глобальные переменные с префиксом <em>g_</em>.
 <br>
@@ -552,7 +552,7 @@ a, a:link, a:active, a:visited {
   </tr>
   <tr>
     <td>action_standby_db_promote</td>
-    <td>status.master_db_state!=G_DB_STATE_READ_WRITE &&<br>status.standby_db_state==G_DB_STATE_IN_RECOVERY &&<br>(time_now()-status.value_time) &gt;g_time_standby_promote_delay_int &&<br>status.standby_db_lag &lt;=g_time_standby_allowable_lag_int</td>
+    <td>status.master_db_state!=G_DB_STATE_READ_WRITE &&<br>status.standby_db_state==G_DB_STATE_IN_RECOVERY &&<br>(time_now()-status.value_time)&gt;g_time_standby_promote_delay_int &&<br>status.standby_db_lag&lt;=g_time_standby_allowable_lag_int</td>
     <td>command_master_vip_down<br>command_standby_db_promote<br>command_standby_vip_up</td>
   </tr>
   <tr>
