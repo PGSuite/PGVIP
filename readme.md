@@ -41,6 +41,8 @@ PGVIP is installed only on web servers, not on database servers.
 
 3\. Install  
 ```make install ip_master=[ip_master] ip_standby=[ip_standby] ip_virtual=[ip_virtual] subnet_mask=[subnet_mask] ```
+example:
+```make install ip_master=192.168.56.1 ip_standby=192.168.56.2 ip_virtual=192.168.56.10 subnet_mask=255.255.255.0 ```
 
 4\. Start service  
 ```systemctl --now enable pgvip ```
@@ -50,9 +52,16 @@ PGVIP is installed only on web servers, not on database servers.
 ```pgvip status ```  
 ```journalctl -fu pgvip ```  
 
-6\. View run-time configuration with the final OS commands  
-```pgvip show config ```
+### Configuration ### 
 
+/etc/pgvip.conf - configuration file, copied by the <em>make install</em> command, which writes IP addresses into it.
+To change the parameters, need to edit the file and restart the service by executing <em>systemctl restart pgvip</em>
+
+The run-time configuration with the final OS commands can be viewed using the command
+```pgvip show config ``` 
+example:
+```pgvip show config | grep command_master_db_state ``` 
+to check, the received command can be executed in the command line
 
 ### Failover example ### 
 
