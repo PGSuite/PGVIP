@@ -1,4 +1,4 @@
-## PGVIP | Auto failover to a standby PostgreSQL server via virtual IP
+## PGVIP | Auto failover to standby PostgreSQL using virtual IP
 
 PGVIP - auto failover service from master to standby PostgreSQL database using virtual (floating) IP address
 
@@ -40,8 +40,8 @@ PGVIP is installed only on web servers, not on database servers.
 ```make```
 
 3\. Install  
-```make install ip_master=[ip_master] ip_standby=[ip_standby] ip_virtual=[ip_virtual] subnet_mask=[subnet_mask] ```
-example:
+```make install ip_master=[ip_master] ip_standby=[ip_standby] ip_virtual=[ip_virtual] subnet_mask=[subnet_mask] ```  
+example:  
 ```make install ip_master=192.168.56.1 ip_standby=192.168.56.2 ip_virtual=192.168.56.10 subnet_mask=255.255.255.0 ```
 
 4\. Start service  
