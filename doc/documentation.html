@@ -471,17 +471,18 @@ a, a:link, a:active, a:visited {
 <a id="description"></a>
 <p><b>Description</b></p>
 <br>
-When launched, the pgvip service (module pgvip.c) loads parameters from the configuration file into global variables (global.h,global.c),
+
+When launched, the pgvip service (module <a href="https://github.com/PGSuite/PGVIP/blob/main/pgvip.c" target="_blank">pgvip.c</a>) loads parameters from the configuration file into global variables (<a href="https://github.com/PGSuite/PGVIP/blob/main/global.h" target="_blank">global.h</a>,<a href="https://github.com/PGSuite/PGVIP/blob/main/global.c" target="_blank">global.c</a>),
 generates final operating system commands based on templates with variables.
 All configuration file parameters and final commands correspond to global variables of the same name with the prefix <em>g_</em>.
 <br><br>
 Next, the service starts the threads:
 <br>
 <table>
-  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">CHECKER_MASTER_DB, CHECKER_STANDBY_DB</td><td style="text-align: center; width: 30px;">-</td><td>checking the status of databases (checker.c)</td></tr>
-  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">CHECKER_MASTER_VIP, CHECKER_STANDBY_VIP</td><td style="text-align: center; width: 30px;">-</td><td>checking virtual IP address (checker.c)</td></tr>
-  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">ACTION_EXECUTOR</td><td style="text-align: center; width: 30px;">-</td><td>performing actions (action.c)</td></tr>
-  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">ADMINISTRATION</td><td style="text-align: center; width: 30px;">-</td><td>processing of <em>status</em>, <em>stop</em> and <em>show</em> commands (util_admin.c)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">CHECKER_MASTER_DB, CHECKER_STANDBY_DB</td><td style="text-align: center; width: 30px;">-</td><td>checking the status of databases (<a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a>)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">CHECKER_MASTER_VIP, CHECKER_STANDBY_VIP</td><td style="text-align: center; width: 30px;">-</td><td>checking virtual IP address (<a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a>)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">ACTION_EXECUTOR</td><td style="text-align: center; width: 30px;">-</td><td>performing actions (<a href="https://github.com/PGSuite/PGVIP/blob/main/action.c" target="_blank">action.c</a>)</td></tr>
+  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">ADMINISTRATION</td><td style="text-align: center; width: 30px;">-</td><td>processing of <em>status</em>, <em>stop</em> and <em>show</em> commands (<a href="https://github.com/PGSuite/PGVIP/blob/main/util/util_admin.c" target="_blank">util_admin.c</a>)</td></tr>
 </table>
 
 <br>
@@ -499,7 +500,7 @@ Written in the system log:
 <ul style="margin: 0; padding-left: 20px;">
 <li>action name: the actual name of the procedure (<em>__func__</em>)</li>
 <li>initial status: <em>pgvip status</em></li>
-<li>condition: real C code fragment (<em>#define action_condition_text(condition) #condition</em>)status</em></li>
+<li>condition: real C code fragment (<em>#define action_condition_text(condition) #condition</em>)</li>
 <li>operating system commands: command text, stdout/stderr output, exit code</li>
 </ul>
 <br><br>
@@ -550,7 +551,7 @@ To get the command text by the variable name, need to execute in the command lin
   </tr>
   <tr>
     <td>action_standby_db_promote</td>
-    <td>status.master_db_state!=G_DB_STATE_READ_WRITE &&<br>status.standby_db_state==G_DB_STATE_IN_RECOVERY &&<br>(time_now()-status.value_time)>g_time_standby_promote_delay_int &&<br>status.standby_db_lag<=g_time_standby_allowable_lag_int</td>
+    <td>status.master_db_state!=G_DB_STATE_READ_WRITE &&<br>status.standby_db_state==G_DB_STATE_IN_RECOVERY &&<br>(time_now()-status.value_time) &gt;g_time_standby_promote_delay_int &&<br>status.standby_db_lag &lt;=g_time_standby_allowable_lag_int</td>
     <td>command_master_vip_down<br>command_standby_db_promote<br>command_standby_vip_up</td>
   </tr>
   <tr>

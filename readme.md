@@ -4,6 +4,7 @@ PGVIP - auto failover service from master to standby PostgreSQL database using v
 
 The service is installed on one server, which is a [single point of failure](https://en.wikipedia.org/wiki/Single_point_of_failure) (example, nginx proxy), or on any two servers (hereinafter referred to as web servers).
 There is no need to install anything on the database servers; the web server connects to them via ssh and executes commands from the configuration file.
+Administrator performs initial setup of the standby database and reverse switch manually.
 
 <b>Failover schema</b>
 
