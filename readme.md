@@ -54,7 +54,7 @@ example:
 
 ### Configuration ### 
 
-/etc/pgvip.conf - configuration file, copied by the <em>make install</em> command, which writes IP addresses into it.
+/etc/pgsuite/pgvip.conf - configuration file, copied by the <em>make install</em> command, which writes IP addresses into it.
 To change the parameters, need to edit the file and restart the service by executing <em>systemctl restart pgvip</em>
 
 The run-time configuration with the final OS commands can be viewed using the command  

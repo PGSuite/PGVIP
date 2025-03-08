@@ -1,16 +1,15 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
-#include <limits.h>
-
 #include "util/util.h"
 
-#define G_CONFIG_FILE "/etc/pgvip.conf"
+#define G_CONFIG_FILE "/etc/pgsuite/pgvip.conf"
 
 #define G_SIZE_IP              20
 #define G_SIZE_COMMAND        500
 #define G_SIZE_IFNAME          15
 #define G_SIZE_TIME            10
+#define G_SIZE_LOG_PARAM       10
 
 #define G_STANDBY_LAG_UNKNOWN INT_MAX
 
@@ -97,6 +96,10 @@ extern int g_time_standby_promote_delay_int;
 extern int g_time_vip_auto_down_timeout_int;
 extern int g_time_vip_auto_down_duration_int;
 extern int g_time_monitoring_interval_int;
+
+char g_log_file         [PATH_MAX];
+char g_log_storage_days [G_SIZE_LOG_PARAM];
+char g_log_check_updates[G_SIZE_LOG_PARAM];
 
 extern char g_command_master_db_state             [G_SIZE_COMMAND];
 extern char g_command_master_db_break             [G_SIZE_COMMAND];

@@ -8,45 +8,31 @@
 
 #include "util.h"
 
-int admin_port;
-char *(*admin_commands_name)[];
+int                      admin_port;
+char                     *(*admin_commands_name)[];
 admin_command_function_t *(*admin_commands_function)[];
 
-void admin_initialize(int application_port, const char *commands_name[], const admin_command_function_t *commands_function[]) {
-}
-
-void* admin_thread(void *args) {
-
+void* _admin_thread(void *args) {
 	thread_begin(args);
-
     tcp_socket socket_listen;
-
 	if (tcp_unix_socket_create(&socket_listen)) log_exit_fatal();
-
 	if (tcp_unix_bind(socket_listen, admin_port)) log_exit_fatal();
-
 	if (tcp_socket_listen(socket_listen)) log_exit_fatal();
 	log_info("listening");
-
 	while (1) {
 		tcp_socket socket_connection;
-
 		if (tcp_socket_accept(socket_listen, &socket_connection)) continue;
 		log_info("connection accepted");
-
 		tcp_set_socket_timeout(socket_connection);
-
 		char command[STR_SIZE];
 		if (tcp_recv_str(socket_connection, command, sizeof(command))) {
 			tcp_socket_close(socket_connection);
 			continue;
 		}
 		log_info("received command \"%s\"", command);
-
 		if (!strcmp(command, "stop")) {
 			log_exit_stop();
 		}
-
 		for(int i=0;;i++) {
 			if ((*admin_commands_name)[i]==NULL) {
 				log_error(39, command);
@@ -62,14 +48,14 @@ void* admin_thread(void *args) {
 				break;
 			}
 		}
-
 		tcp_socket_close(socket_connection);
-
 	}
-
 	thread_end(args);
 	return 0;
+}
 
+int admin_thread_create() {
+	return thread_create(_admin_thread, "ADMINISTRATION", NULL);
 }
 
 void admin_check_command(int argc, char *argv[], int application_port, const char *commands_name[], const admin_command_function_t *commands_function[])

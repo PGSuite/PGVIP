@@ -47,6 +47,10 @@ int g_time_vip_auto_down_timeout_int;
 int g_time_vip_auto_down_duration_int;
 int g_time_monitoring_interval_int;
 
+char g_log_file         [PATH_MAX]         = "";
+char g_log_storage_days [G_SIZE_LOG_PARAM] = "";
+char g_log_check_updates[G_SIZE_LOG_PARAM] = "";
+
 char g_command_master_db_state             [G_SIZE_COMMAND];
 char g_command_master_db_break             [G_SIZE_COMMAND];
 char g_command_master_vip_state            [G_SIZE_COMMAND];
@@ -170,7 +174,10 @@ void g_initialize() {
 			g_initialize_var_set(g_time_standby_promote_delay)     ||
 			g_initialize_var_set(g_time_vip_auto_down_timeout)     ||
 			g_initialize_var_set(g_time_vip_auto_down_duration)    ||
-			g_initialize_var_set(g_time_monitoring_interval)
+			g_initialize_var_set(g_time_monitoring_interval)       ||
+			g_initialize_var_set(g_log_file)                       ||
+			g_initialize_var_set(g_log_storage_days)               ||
+			g_initialize_var_set(g_log_check_updates)
 		)
 			log_exit_fatal();
 	}
@@ -322,6 +329,10 @@ int g_admin_show_config(char *info, int info_size) {
 		g_admin_show_config_var_add(g_time_vip_auto_down_timeout)     ||
 		g_admin_show_config_var_add(g_time_vip_auto_down_duration)    ||
 		g_admin_show_config_var_add(g_time_monitoring_interval)       ||
+		str_add(info, info_size, "\nLogging\n", NULL) || !(var_name_len_max=strlen('log_check_updates')) ||
+		g_admin_show_config_var_add(g_log_file)          ||
+		g_admin_show_config_var_add(g_log_storage_days)  ||
+		g_admin_show_config_var_add(g_log_check_updates) ||
 		str_add(info, info_size, "\nGenerated OS commands\n", NULL) || !(var_name_len_max=38) ||
 		g_admin_show_config_var_add(g_command_master_db_state)               ||
 		g_admin_show_config_var_add(g_command_master_db_break)               ||
