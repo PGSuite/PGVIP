@@ -6,9 +6,11 @@ The service is installed on one server, which is a [single point of failure](htt
 There is no need to install anything on the database servers; the web server connects to them via ssh and executes commands from the configuration file.
 Administrator performs initial setup of the standby database and reverse switch manually.
 
-<b>Failover schema</b>
+<b>Failover schemas</b>
 
-![Failover schema](doc/failover-schema.png)
+![Failover schema for one web server](doc/failover-schema-single.png)
+
+![Failover schema for multiple web servers](doc/failover-schema-multiple.png)
 
 Technically, the PGVIP service is implemented as a wrapper that executes operating system commands from a configuration file.
 It was originally developed as a bash script, then rewritten in C language.
