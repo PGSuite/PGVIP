@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="">
 
 <head>
 
@@ -457,6 +457,7 @@ a, a:link, a:active, a:visited {
 
 <ul>
 <li><a href="#description">Description</a></li>
+<li><a href="#threads">Threads</a></li>
 <li><a href="#actions">Actions</a></li>
 <li><a href="#command-line">Command line</a></li>
 </ul>
@@ -473,20 +474,10 @@ a, a:link, a:active, a:visited {
 <br>
 
 When launched, the pgvip service (module <a href="https://github.com/PGSuite/PGVIP/blob/main/pgvip.c" target="_blank">pgvip.c</a>) loads parameters from the <a href="https://github.com/PGSuite/PGVIP/blob/main/pgvip.conf" target="_blank">pgvip.conf</a> configuration file into global variables (<a href="https://github.com/PGSuite/PGVIP/blob/main/global.h" target="_blank">global.h</a>,<a href="https://github.com/PGSuite/PGVIP/blob/main/global.c" target="_blank">global.c</a>),
-generates final operating system commands based on templates with variables.
+generates final operating system commands based on templates with variables, starts the threads.
 All configuration file parameters and final commands correspond to global variables of the same name with the prefix <em>g_</em>.
-<br><br>
-Next, the service starts the threads:
 <br>
-<table>
-  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">CHECKER_MASTER_DB, CHECKER_STANDBY_DB</td><td style="text-align: center; width: 30px;">-</td><td>checking the status of databases (<a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a>)</td></tr>
-  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">CHECKER_MASTER_VIP, CHECKER_STANDBY_VIP</td><td style="text-align: center; width: 30px;">-</td><td>checking virtual IP address (<a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a>)</td></tr>
-  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">ACTION_EXECUTOR</td><td style="text-align: center; width: 30px;">-</td><td>performing actions (<a href="https://github.com/PGSuite/PGVIP/blob/main/action.c" target="_blank">action.c</a>)</td></tr>
-  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">ADMINISTRATION</td><td style="text-align: center; width: 30px;">-</td><td>processing of <em>status</em>, <em>stop</em> and <em>show</em> commands (<a href="https://github.com/PGSuite/PGVIP/blob/main/util/util_admin.c" target="_blank">util_admin.c</a>)</td></tr>
-</table>
-
 <br>
-
 Check threads with an interval of <em>{time_check_interval}</em> execute commands <em>{command_db_state},{command_vip_state}</em> and set the result to the global variable <em>g_status</em>.
 Only commands that were executed with an error are written to the system log.
 <br>
@@ -506,6 +497,68 @@ Written in the system log:
 <br><br>
 
 
+<a id="threads"></a>
+<div class="color-menu-item-selected background-menu" style="width: 100%; font-weight: bold; padding: 3px;">
+Threads
+</div>
+
+<br>
+<table class="table-source-code border-color-menu">
+  <tr>
+  <th class="background-header">Thread</th>  <th class="background-header">Purpose</th>  <th class="background-header">Module</th>  <th class="background-header">Function</th>  </tr>
+  <tr>
+    <td>CHECKER_MASTER_DB</td>
+    <td>checking the status of master database</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c#:~:text=%20checker_master_db_thread(" target="_blank">checker_master_db_thread</a></td>
+  </tr>
+  <tr>
+    <td>CHECKER_STANDBY_DB</td>
+    <td>checking the status of standby database</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c#:~:text=%20checker_standby_db_thread(" target="_blank">checker_standby_db_thread</a></td>
+  </tr>
+  <tr>
+    <td>CHECKER_MASTER_VIP</td>
+    <td>checking virtual IP address on the master server</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c#:~:text=%20checker_master_vip_thread(" target="_blank">checker_master_vip_thread</a></td>
+  </tr>
+  <tr>
+    <td>CHECKER_STANDBY_VIP</td>
+    <td>checking virtual IP address on the standby server</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c#:~:text=%20checker_standby_vip_thread(" target="_blank">checker_standby_vip_thread</a></td>
+  </tr>
+  <tr>
+    <td>ACTION_EXECUTOR</td>
+    <td>performing actions</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c" target="_blank">action.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_executor_thread(" target="_blank">action_executor_thread</a></td>
+  </tr>
+  <tr>
+    <td>MONITORING</td>
+    <td>sending metric to the monitoring system, notification</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/monitoring.c" target="_blank">monitoring.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/monitoring.c#:~:text=%20monitoring_thread(" target="_blank">monitoring_thread</a></td>
+  </tr>
+  <tr>
+    <td>LOGGER</td>
+    <td>log rotation, checking for updates</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/util/util_log.c" target="_blank">util_log.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/util/util_log.c#:~:text=%20_log_thread(" target="_blank">_log_thread</a></td>
+  </tr>
+  <tr>
+    <td>ADMINISTRATION</td>
+    <td>processing of <em>status</em>, <em>stop</em> and <em>show</em> commands</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/util/util_admin.c" target="_blank">util_admin.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/util/util_admin.c#:~:text=%20_admin_thread(" target="_blank">_admin_thread</a></td>
+  </tr>
+</table>
+
+<br><br>
+
+
 <a id="actions"></a>
 <div class="color-menu-item-selected background-menu" style="width: 100%; font-weight: bold; padding: 3px;">
 Actions
@@ -520,42 +573,42 @@ To get the command text by the variable name, need to execute in the command lin
   <tr>
   <th class="background-header">Action (procedure)</th>  <th class="background-header">Condition (if)</th>  <th class="background-header">Commands (vars)</th>  </tr>
   <tr>
-    <td>action_master_vip_auto_down_execute</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_master_vip_auto_down_execute(" target="_blank">action_master_vip_auto_down_execute</a></td>
     <td>status.master_vip_auto_down==G_VIP_AUTO_DOWN_NOT_EXECUTING</td>
     <td>command_master_vip_auto_down_execute</td>
   </tr>
   <tr>
-    <td>action_master_vip_up</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_master_vip_up(" target="_blank">action_master_vip_up</a></td>
     <td>status.standby_db_state!=G_DB_STATE_READ_WRITE &&<br>status.master_db_state==G_DB_STATE_READ_WRITE &&<br>status.master_vip_state==G_VIP_STATE_DOWN &&<br>status.master_vip_auto_down==G_VIP_AUTO_DOWN_EXECUTING</td>
     <td>command_master_vip_up</td>
   </tr>
   <tr>
-    <td>action_master_vip_down</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_master_vip_down(" target="_blank">action_master_vip_down</a></td>
     <td>status.master_vip_state==G_VIP_STATE_UP &&<br>(status.master_db_state!=G_DB_STATE_READ_WRITE ||<br>status.standby_db_state==G_DB_STATE_READ_WRITE)</td>
     <td>command_master_vip_down</td>
   </tr>
   <tr>
-    <td>action_standby_vip_auto_down_execute</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_standby_vip_auto_down_execute(" target="_blank">action_standby_vip_auto_down_execute</a></td>
     <td>status.standby_vip_auto_down==G_VIP_AUTO_DOWN_NOT_EXECUTING</td>
     <td>command_standby_vip_auto_down_execute</td>
   </tr>
   <tr>
-    <td>action_standby_vip_up</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_standby_vip_up(" target="_blank">action_standby_vip_up</a></td>
     <td>status.master_vip_state!=G_VIP_STATE_UP &&<br>status.standby_db_state==G_DB_STATE_READ_WRITE &&<br>status.standby_vip_state==G_VIP_STATE_DOWN &&<br>status.standby_vip_auto_down==G_VIP_AUTO_DOWN_EXECUTING</td>
     <td>command_standby_vip_up</td>
   </tr>
   <tr>
-    <td>action_standby_vip_down</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_standby_vip_down(" target="_blank">action_standby_vip_down</a></td>
     <td>status.standby_vip_state==G_VIP_STATE_UP &&<br>status.standby_db_state!=G_DB_STATE_READ_WRITE</td>
     <td>command_standby_vip_down</td>
   </tr>
   <tr>
-    <td>action_standby_db_promote</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_standby_db_promote(" target="_blank">action_standby_db_promote</a></td>
     <td>status.master_db_state!=G_DB_STATE_READ_WRITE &&<br>status.standby_db_state==G_DB_STATE_IN_RECOVERY &&<br>(time_now()-status.value_time)&gt;g_time_standby_promote_delay_int &&<br>status.standby_db_lag&lt;=g_time_standby_allowable_lag_int</td>
     <td>command_master_vip_down<br>command_standby_db_promote<br>command_standby_vip_up</td>
   </tr>
   <tr>
-    <td>action_master_db_break</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_master_db_break(" target="_blank">action_master_db_break</a></td>
     <td>status.master_db_state==G_DB_STATE_READ_WRITE &&<br>status.standby_db_state==G_DB_STATE_READ_WRITE</td>
     <td>command_master_db_break</td>
   </tr>

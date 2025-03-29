@@ -1,8 +1,8 @@
 #include "global.h"
 #include "util/util.h"
 
-void* checker_master_db_thread(void *args) {
-	thread_begin(args);
+void* checker_master_db_thread(thread_params_t *params) {
+	thread_begin("CHECKER_MASTER_DB");
 	char output[200];
 	for(;;sleep(g_time_check_interval_int)) {
 	    int result = thread_unix_command_execute(g_command_master_db_state, output, sizeof(output), 0);
@@ -19,11 +19,11 @@ void* checker_master_db_thread(void *args) {
 		}
 		g_status_unlock_refresh();
 	}
-	thread_end(args);
+	thread_end();
 }
 
-void* checker_standby_db_thread(void *args) {
-	thread_begin(args);
+void* checker_standby_db_thread(thread_params_t *params) {
+	thread_begin("CHECKER_STANDBY_DB");
 	char output[200];
 	for(;;sleep(g_time_check_interval_int)) {
 	    int result = thread_unix_command_execute(g_command_standby_db_state, output, sizeof(output), 0);
@@ -45,7 +45,7 @@ void* checker_standby_db_thread(void *args) {
 		}
 		g_status_unlock_refresh();
 	}
-	thread_end(args);
+	thread_end();
 }
 
 void checker_vip(char *command_state, g_vip_state_t *state, char *ifname, g_vip_auto_down_t *auto_down_state, time_t *state_time) {
@@ -70,14 +70,14 @@ void checker_vip(char *command_state, g_vip_state_t *state, char *ifname, g_vip_
 	}
 }
 
-void* checker_master_vip_thread(void *args) {
-	thread_begin(args);
+void* checker_master_vip_thread(thread_params_t *params) {
+	thread_begin("CHECKER_MASTER_VIP");
 	checker_vip(g_command_master_vip_state, &g_status.master_vip_state, g_status.master_vip_ifname, &g_status.master_vip_auto_down, &g_status.master_vip_time);
-	thread_end(args);
+	thread_end();
 }
 
-void* checker_standby_vip_thread(void *args) {
-	thread_begin(args);
+void* checker_standby_vip_thread(thread_params_t *params) {
+	thread_begin("CHECKER_STANDBY_VIP");
 	checker_vip(g_command_standby_vip_state, &g_status.standby_vip_state, g_status.standby_vip_ifname, &g_status.standby_vip_auto_down, &g_status.standby_vip_time);
-	thread_end(args);
+	thread_end();
 }

@@ -38,6 +38,7 @@ typedef enum {
     G_VIP_AUTO_DOWN_NOT_AVAILABLE
 } g_vip_auto_down_t;
 
+extern const char *G_STATUS_NAMES[];
 
 typedef struct {
 	g_status_value_t value;
@@ -79,6 +80,9 @@ extern char g_command_vip_down             [G_SIZE_COMMAND];
 extern char g_command_vip_auto_down_script [G_SIZE_COMMAND];
 extern char g_command_vip_auto_down_execute[G_SIZE_COMMAND];
 
+extern char g_command_monitoring_send  [G_SIZE_COMMAND];
+extern char g_command_monitoring_notify[G_SIZE_COMMAND];
+
 extern char g_time_command_ssh_timeout      [G_SIZE_TIME];
 extern char g_time_check_interval           [G_SIZE_TIME];
 extern char g_time_check_not_available_delay[G_SIZE_TIME];
@@ -86,7 +90,6 @@ extern char g_time_standby_allowable_lag    [G_SIZE_TIME];
 extern char g_time_standby_promote_delay    [G_SIZE_TIME];
 extern char g_time_vip_auto_down_timeout    [G_SIZE_TIME];
 extern char g_time_vip_auto_down_duration   [G_SIZE_TIME];
-extern char g_time_monitoring_interval      [G_SIZE_TIME];
 
 extern int g_time_command_ssh_timeout_int;
 extern int g_time_check_interval_int;
@@ -97,9 +100,9 @@ extern int g_time_vip_auto_down_timeout_int;
 extern int g_time_vip_auto_down_duration_int;
 extern int g_time_monitoring_interval_int;
 
-char g_log_file         [PATH_MAX];
-char g_log_storage_days [G_SIZE_LOG_PARAM];
-char g_log_check_updates[G_SIZE_LOG_PARAM];
+extern char g_log_file         [PATH_MAX];
+extern char g_log_storage_days [G_SIZE_LOG_PARAM];
+extern char g_log_check_updates[G_SIZE_LOG_PARAM];
 
 extern char g_command_master_db_state             [G_SIZE_COMMAND];
 extern char g_command_master_db_break             [G_SIZE_COMMAND];

@@ -50,7 +50,7 @@ example:
 5\. Check status and system log  
 ```systemctl status pgvip ```  
 ```pgvip status ```  
-```journalctl -fu pgvip ```  
+```journalctl -fu pgvip (or tail -f /var/log/pgsuite/pgvip.log)```  
 
 ### Configuration ### 
 

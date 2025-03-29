@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru/">
 
 <head>
 
@@ -457,6 +457,7 @@ a, a:link, a:active, a:visited {
 
 <ul>
 <li><a href="#description">Описание</a></li>
+<li><a href="#threads">Нити</a></li>
 <li><a href="#actions">Действия</a></li>
 <li><a href="#command-line">Командная строка</a></li>
 </ul>
@@ -473,21 +474,9 @@ a, a:link, a:active, a:visited {
 <br>
 
 При запуске служба pgvip (модуль <a href="https://github.com/PGSuite/PGVIP/blob/main/pgvip.c" target="_blank">pgvip.c</a>) загружает параметры из конфигурационного файла <a href="https://github.com/PGSuite/PGVIP/blob/main/pgvip.conf" target="_blank">pgvip.conf</a> в глобальные переменные (<a href="https://github.com/PGSuite/PGVIP/blob/main/global.h" target="_blank">global.h</a>,<a href="https://github.com/PGSuite/PGVIP/blob/main/global.c" target="_blank">global.c</a>),
-на основе шаблонов с переменными формирует финальные команды операционной системы.
+на основе шаблонов с переменными формирует финальные команды операционной системы, запускает нити.
 Всем параметрам конфигурационного файла и финальным командам соответствуют одноименные глобальные переменные с префиксом <em>g_</em>.
-<br>
-Далее запускает нити:
-<br>
-<table>
-  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">CHECKER_MASTER_DB, CHECKER_STANDBY_DB</td><td style="text-align: center; width: 30px;">-</td><td>проверка состояния баз данных (<a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a>)</td></tr>
-  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">CHECKER_MASTER_VIP, CHECKER_STANDBY_VIP</td><td style="text-align: center; width: 30px;">-</td><td>проверка виртуального IP адреса (<a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a>)</td></tr>
-  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">ACTION_EXECUTOR</td><td style="text-align: center; width: 30px;">-</td><td>выполнение действий (<a href="https://github.com/PGSuite/PGVIP/blob/main/action.c" target="_blank">action.c</a>)</td></tr>
-  <tr><td style="width: 10px;"></td><td style="white-space: nowrap;">ADMINISTRATION</td><td style="text-align: center; width: 30px;">-</td><td>обработка команд <em>status</em>, <em>stop</em> и <em>show</em> (<a href="https://github.com/PGSuite/PGVIP/blob/main/util/util_admin.c" target="_blank">util_admin.c</a>)</td></tr>
-</table>
-
-<br>
-
-
+<br><br>
 Нити проверок с интервалом <em>{time_check_interval}</em> выполняют команды <em>{command_db_state},{command_vip_state}</em> и результат записывают в глобальную переменную <em>g_status</em>.
 В журнал собщений выводятся только команды выполненные с ошибкой.
 <br>
@@ -506,6 +495,66 @@ a, a:link, a:active, a:visited {
 </ul>
 <br><br>
 
+<a id="threads"></a>
+<div class="color-menu-item-selected background-menu" style="width: 100%; font-weight: bold; padding: 3px;">
+Нити
+</div>
+
+<br>
+<table class="table-source-code border-color-menu">
+  <tr>
+  <th class="background-header">Нить</th>  <th class="background-header">Назначение</th>  <th class="background-header">Модуль</th>  <th class="background-header">Функция</th>  </tr>
+  <tr>
+    <td>CHECKER_MASTER_DB</td>
+    <td>проверка состояния базы данных master</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c#:~:text=%20checker_master_db_thread(" target="_blank">checker_master_db_thread</a></td>
+  </tr>
+  <tr>
+    <td>CHECKER_STANDBY_DB</td>
+    <td>проверка состояния базы данных standby</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c#:~:text=%20checker_standby_db_thread(" target="_blank">checker_standby_db_thread</a></td>
+  </tr>
+  <tr>
+    <td>CHECKER_MASTER_VIP</td>
+    <td>проверка виртуального IP адреса на master</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c#:~:text=%20checker_master_vip_thread(" target="_blank">checker_master_vip_thread</a></td>
+  </tr>
+  <tr>
+    <td>CHECKER_STANDBY_VIP</td>
+    <td>проверка виртуального IP адреса на standby</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c" target="_blank">checker.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/checker.c#:~:text=%20checker_standby_vip_thread(" target="_blank">checker_standby_vip_thread</a></td>
+  </tr>
+  <tr>
+    <td>ACTION_EXECUTOR</td>
+    <td>выполнение действий</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c" target="_blank">action.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_executor_thread(" target="_blank">action_executor_thread</a></td>
+  </tr>
+  <tr>
+    <td>MONITORING</td>
+    <td>отправка метрики в систему мониторинга, оповещение</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/monitoring.c" target="_blank">monitoring.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/monitoring.c#:~:text=%20monitoring_thread(" target="_blank">monitoring_thread</a></td>
+  </tr>
+  <tr>
+    <td>LOGGER</td>
+    <td>ротация лога, проверка обновлений</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/util/util_log.c" target="_blank">util_log.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/util/util_log.c#:~:text=%20_log_thread(" target="_blank">_log_thread</a></td>
+  </tr>
+  <tr>
+    <td>ADMINISTRATION</td>
+    <td>обработка команд <em>status</em>, <em>stop<em> и <em>show</em></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/util/util_admin.c" target="_blank">util_admin.c</a></td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/util/util_admin.c#:~:text=%20_admin_thread(" target="_blank">_admin_thread</a></td>
+  </tr>
+</table>
+
+<br><br>
 
 <a id="actions"></a>
 <div class="color-menu-item-selected background-menu" style="width: 100%; font-weight: bold; padding: 3px;">
@@ -521,42 +570,42 @@ a, a:link, a:active, a:visited {
   <tr>
   <th class="background-header">Действие (процедура)</th>  <th class="background-header">Условие (if)</th>  <th class="background-header">Команды (переменные)</th>  </tr>
   <tr>
-    <td>action_master_vip_auto_down_execute</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_master_vip_auto_down_execute(" target="_blank">action_master_vip_auto_down_execute</a></td>
     <td>status.master_vip_auto_down==G_VIP_AUTO_DOWN_NOT_EXECUTING</td>
     <td>command_master_vip_auto_down_execute</td>
   </tr>
   <tr>
-    <td>action_master_vip_up</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_master_vip_up(" target="_blank">action_master_vip_up</a></td>
     <td>status.standby_db_state!=G_DB_STATE_READ_WRITE &&<br>status.master_db_state==G_DB_STATE_READ_WRITE &&<br>status.master_vip_state==G_VIP_STATE_DOWN &&<br>status.master_vip_auto_down==G_VIP_AUTO_DOWN_EXECUTING</td>
     <td>command_master_vip_up</td>
   </tr>
   <tr>
-    <td>action_master_vip_down</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_master_vip_down(" target="_blank">action_master_vip_down</a></td>
     <td>status.master_vip_state==G_VIP_STATE_UP &&<br>(status.master_db_state!=G_DB_STATE_READ_WRITE ||<br>status.standby_db_state==G_DB_STATE_READ_WRITE)</td>
     <td>command_master_vip_down</td>
   </tr>
   <tr>
-    <td>action_standby_vip_auto_down_execute</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_standby_vip_auto_down_execute(" target="_blank">action_standby_vip_auto_down_execute</a></td>
     <td>status.standby_vip_auto_down==G_VIP_AUTO_DOWN_NOT_EXECUTING</td>
     <td>command_standby_vip_auto_down_execute</td>
   </tr>
   <tr>
-    <td>action_standby_vip_up</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_standby_vip_up(" target="_blank">action_standby_vip_up</a></td>
     <td>status.master_vip_state!=G_VIP_STATE_UP &&<br>status.standby_db_state==G_DB_STATE_READ_WRITE &&<br>status.standby_vip_state==G_VIP_STATE_DOWN &&<br>status.standby_vip_auto_down==G_VIP_AUTO_DOWN_EXECUTING</td>
     <td>command_standby_vip_up</td>
   </tr>
   <tr>
-    <td>action_standby_vip_down</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_standby_vip_down(" target="_blank">action_standby_vip_down</a></td>
     <td>status.standby_vip_state==G_VIP_STATE_UP &&<br>status.standby_db_state!=G_DB_STATE_READ_WRITE</td>
     <td>command_standby_vip_down</td>
   </tr>
   <tr>
-    <td>action_standby_db_promote</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_standby_db_promote(" target="_blank">action_standby_db_promote</a></td>
     <td>status.master_db_state!=G_DB_STATE_READ_WRITE &&<br>status.standby_db_state==G_DB_STATE_IN_RECOVERY &&<br>(time_now()-status.value_time)&gt;g_time_standby_promote_delay_int &&<br>status.standby_db_lag&lt;=g_time_standby_allowable_lag_int</td>
     <td>command_master_vip_down<br>command_standby_db_promote<br>command_standby_vip_up</td>
   </tr>
   <tr>
-    <td>action_master_db_break</td>
+    <td><a href="https://github.com/PGSuite/PGVIP/blob/main/action.c#:~:text=%20action_master_db_break(" target="_blank">action_master_db_break</a></td>
     <td>status.master_db_state==G_DB_STATE_READ_WRITE &&<br>status.standby_db_state==G_DB_STATE_READ_WRITE</td>
     <td>command_master_db_break</td>
   </tr>

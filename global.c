@@ -8,8 +8,8 @@ const char *G_DB_STATE_NAMES []     = {"read-write", "in recovery",   "not avail
 const char *G_VIP_STATE_NAMES[]     = {"up",         "down",          "not available"};
 const char *G_VIP_AUTO_DOWN_NAMES[] = {"executing",  "not executing", "not available"};
 
-g_status_t   g_status;
-thread_mutex g_status_mutex;
+g_status_t     g_status;
+thread_mutex_t g_status_mutex;
 
 char g_ip_master     [G_SIZE_IP] = "";
 char g_ip_standby    [G_SIZE_IP] = "";
@@ -29,6 +29,9 @@ char g_command_vip_down             [G_SIZE_COMMAND] = "";
 char g_command_vip_auto_down_script [G_SIZE_COMMAND] = "";
 char g_command_vip_auto_down_execute[G_SIZE_COMMAND] = "";
 
+char g_command_monitoring_send  [G_SIZE_COMMAND] = "";
+char g_command_monitoring_notify[G_SIZE_COMMAND] = "";
+
 char g_time_command_ssh_timeout      [G_SIZE_TIME] = "";
 char g_time_check_interval           [G_SIZE_TIME] = "";
 char g_time_check_not_available_delay[G_SIZE_TIME] = "";
@@ -36,7 +39,6 @@ char g_time_standby_allowable_lag    [G_SIZE_TIME] = "";
 char g_time_standby_promote_delay    [G_SIZE_TIME] = "";
 char g_time_vip_auto_down_timeout    [G_SIZE_TIME] = "";
 char g_time_vip_auto_down_duration   [G_SIZE_TIME] = "";
-char g_time_monitoring_interval      [G_SIZE_TIME] = "";
 
 int g_time_command_ssh_timeout_int;
 int g_time_check_interval_int;
@@ -45,7 +47,6 @@ int g_time_standby_allowable_lag_int;
 int g_time_standby_promote_delay_int;
 int g_time_vip_auto_down_timeout_int;
 int g_time_vip_auto_down_duration_int;
-int g_time_monitoring_interval_int;
 
 char g_log_file         [PATH_MAX]         = "";
 char g_log_storage_days [G_SIZE_LOG_PARAM] = "";
@@ -83,8 +84,7 @@ void g_command_replace_vars(char *command, int command_size, char *g_ip) {
 		g_command_replace_var(g_time_standby_allowable_lag)     ||
 		g_command_replace_var(g_time_standby_promote_delay)     ||
 		g_command_replace_var(g_time_vip_auto_down_timeout)     ||
-		g_command_replace_var(g_time_vip_auto_down_duration)    ||
-		g_command_replace_var(g_time_monitoring_interval)
+		g_command_replace_var(g_time_vip_auto_down_duration)
 	)
 		log_exit_fatal();
 }
@@ -167,6 +167,8 @@ void g_initialize() {
 			g_initialize_var_set(g_command_vip_down)               ||
 			g_initialize_var_set(g_command_vip_auto_down_script)   ||
 			g_initialize_var_set(g_command_vip_auto_down_execute)  ||
+			g_initialize_var_set(g_command_monitoring_send)        ||
+			g_initialize_var_set(g_command_monitoring_notify)      ||
 			g_initialize_var_set(g_time_command_ssh_timeout)       ||
 			g_initialize_var_set(g_time_check_interval)            ||
 			g_initialize_var_set(g_time_check_not_available_delay) ||
@@ -174,7 +176,6 @@ void g_initialize() {
 			g_initialize_var_set(g_time_standby_promote_delay)     ||
 			g_initialize_var_set(g_time_vip_auto_down_timeout)     ||
 			g_initialize_var_set(g_time_vip_auto_down_duration)    ||
-			g_initialize_var_set(g_time_monitoring_interval)       ||
 			g_initialize_var_set(g_log_file)                       ||
 			g_initialize_var_set(g_log_storage_days)               ||
 			g_initialize_var_set(g_log_check_updates)
@@ -190,7 +191,6 @@ void g_initialize() {
 	g_time_standby_promote_delay_int     = atoi(g_time_standby_promote_delay);
 	g_time_vip_auto_down_timeout_int     = atoi(g_time_vip_auto_down_timeout);
 	g_time_vip_auto_down_duration_int    = atoi(g_time_vip_auto_down_duration);
-	g_time_monitoring_interval_int       = atoi(g_time_monitoring_interval);
 
 	g_command_ssh_build(g_command_master_db_state,  sizeof(g_command_master_db_state),  1, g_command_db_state,  g_ip_master);
 	g_command_ssh_build(g_command_master_db_break,  sizeof(g_command_master_db_break),  1, g_command_db_break,  g_ip_master);
@@ -320,6 +320,9 @@ int g_admin_show_config(char *info, int info_size) {
 		g_admin_show_config_var_add(g_command_vip_down)              ||
 		g_admin_show_config_var_add(g_command_vip_auto_down_script)  ||
 		g_admin_show_config_var_add(g_command_vip_auto_down_execute) ||
+		str_add(info, info_size, "\nMonitoring OS commands\n", NULL) || !(var_name_len_max=35) ||
+		g_admin_show_config_var_add(g_command_monitoring_send)   ||
+		g_admin_show_config_var_add(g_command_monitoring_notify) ||
 		str_add(info, info_size, "\nTimings in seconds\n", NULL) || !(var_name_len_max=31) ||
 		g_admin_show_config_var_add(g_time_command_ssh_timeout)       ||
 		g_admin_show_config_var_add(g_time_check_interval)            ||
@@ -328,8 +331,7 @@ int g_admin_show_config(char *info, int info_size) {
 		g_admin_show_config_var_add(g_time_standby_promote_delay)     ||
 		g_admin_show_config_var_add(g_time_vip_auto_down_timeout)     ||
 		g_admin_show_config_var_add(g_time_vip_auto_down_duration)    ||
-		g_admin_show_config_var_add(g_time_monitoring_interval)       ||
-		str_add(info, info_size, "\nLogging\n", NULL) || !(var_name_len_max=strlen('log_check_updates')) ||
+		str_add(info, info_size, "\nLogging\n", NULL) || !(var_name_len_max=18) ||
 		g_admin_show_config_var_add(g_log_file)          ||
 		g_admin_show_config_var_add(g_log_storage_days)  ||
 		g_admin_show_config_var_add(g_log_check_updates) ||

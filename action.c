@@ -88,8 +88,8 @@ void (*actions[])(g_status_t pgvip_status) = {
 	action_master_db_break
 };
 
-void* action_executor_thread(void *args) {
-	thread_begin(args);
+void* action_executor_thread(thread_params_t *params) {
+	thread_begin("ACTION_EXECUTOR");
 	g_status_t status;
 	for(;;sleep(g_time_command_ssh_timeout_int+g_time_check_interval_int+1)) {
 		for(int i=0; i<sizeof(actions)/sizeof(actions[0]); i++) {
@@ -98,5 +98,5 @@ void* action_executor_thread(void *args) {
 			actions[i](status);
 		}
 	}
-	thread_end(args);
+	thread_end();
 }
