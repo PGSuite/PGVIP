@@ -20,7 +20,7 @@ install:
 	rm -f $(file_pgvip)
 	cp pgvip $(file_pgvip)
 	systemctl daemon-reload
-	echo -e '\npgvip service has been successfully created.\nUse command "systemctl --now enable pgvip" to enable and start service,\n"journalctl -fu pgvip" to view the journal'
+	echo -e '\npgvip service has been successfully created.\nUse command "systemctl --now enable pgvip" to enable and start service'
 
 uninstall:
 	systemctl --now disable pgvip ; true

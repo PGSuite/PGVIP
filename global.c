@@ -207,7 +207,7 @@ void g_initialize() {
 	g_command_vip_auto_down_execute_build(g_command_master_vip_auto_down_execute,  sizeof(g_command_master_vip_auto_down_execute),  1);
 	g_command_vip_auto_down_execute_build(g_command_standby_vip_auto_down_execute, sizeof(g_command_standby_vip_auto_down_execute), 0);
 
-	if (thread_mutex_init(&g_status_mutex, "g_status_mutex")) log_exit_fatal();
+	if (thread_mutex_init(&g_status_mutex)) log_exit_fatal();
 
 	time_t now  = time_now();
 	g_status.value      = G_STATUS_ERROR;

@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 	log_check_help(argc, argv, HELP);
 	admin_check_command(argc, argv, 0, (char *[]) {"status", "show config", NULL}, (admin_command_function_t *[]) {g_admin_status, g_admin_show_config, NULL});
 	if (strcmp(argv[1],"execute")) {
-		log_error(39, argv[1]);
+		log_error(1039, argv[1]);
 		exit(2);
 	}
 	g_initialize();

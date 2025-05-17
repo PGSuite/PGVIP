@@ -20,7 +20,7 @@ void _action_end(int result, const char *func) {
 	if (!result)
 		log_info("action \"%s\" executed successfully",func);
 	else
-		log_warn(906, func);
+		log_warn(9006, func);
 }
 
 void _action_command_execute(g_status_t status, int condition, const char *condition_text, const char *command, const char *func) {
